@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM Web Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+        }
+        
+        .game-container {
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
+        }
+        
+        #doomCanvas {
+            width: 100%;
+            height: 600px;
+            background: #000;
+            border: 1px solid #444;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(45deg, #cc0000, #990000);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255,0,0,0.3);
+        }
+        
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #00ff00;
+        }
+        
+        .instructions {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .instructions h3 {
+            color: #ff0000;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            list-style-type: none;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            padding: 5px 0;
+            border-bottom: 1px solid #222;
+        }
+        
+        .instructions li:last-child {
+            border-bottom: none;
+        }
+        
+        .key {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            background: #111;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .error {
+            color: #ff0000;
+            background: #331111;
+            border: 1px solid #ff0000;
+        }
+        
+        .success {
+            color: #00ff00;
+            background: #113311;
+            border: 1px solid #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">DOOM</h1>
+            <p class="subtitle">Original 1993 Experience - Authentic DOS Version</p>
+        </div>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <div class="controls">
+            <button id="startBtn" class="btn">Start Game</button>
+            <button id="resetBtn" class="btn" disabled>Reset</button>
+            <button id="fullscreenBtn" class="btn">Fullscreen</button>
+        </div>
+        
+        <div class="game-container">
+            <div id="doomCanvas"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Original DOOM Controls (Authentic 1993 Experience)</h3>
+            <ul>
+                <li><span class="key">↑/↓ Arrow Keys</span> - Move Forward/Backward</li>
+                <li><span class="key">←/→ Arrow Keys</span> - Turn Left/Right</li>
+                <li><span class="key">Ctrl</span> - Shoot/Fire</li>
+                <li><span class="key">Space</span> - Use/Open Doors</li>
+                <li><span class="key">Shift</span> - Run (Hold)</li>
+                <li><span class="key">Alt + ←/→</span> - Strafe Left/Right</li>
+                <li><span class="key">Tab</span> - Automap</li>
+                <li><span class="key">Esc</span> - Main Menu</li>
+                <li><span class="key">F1</span> - Help</li>
+                <li><span class="key">F2</span> - Save Game</li>
+                <li><span class="key">F3</span> - Load Game</li>
+                <li><span class="key">F6</span> - Quick Save</li>
+                <li><span class="key">F9</span> - Quick Load</li>
+                <li><span class="key">1-8</span> - Select Weapons</li>
+            </ul>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

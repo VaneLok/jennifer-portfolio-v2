@@ -1,0 +1,259 @@
+body {
+    margin: 0;
+    font-family: MSSerif, 'Times New Roman', Times, serif;
+    background-color: #fff;
+}
+
+html, body {
+    background-color: #fff;
+    height: 100%;
+    overflow: hidden;
+}
+
+div {
+    display: flex;
+}
+
+#root {
+    height: 100%;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+/* Font face declarations */
+@font-face {
+    font-family: MSSerif;
+    src: url(./assets/fonts/MSSansSerif.ttf);
+}
+
+@font-face {
+    font-family: Millennium;
+    src: url(./assets/fonts/Millennium.ttf);
+}
+
+@font-face {
+    font-family: MillenniumBold;
+    src: url(./assets/fonts/Millennium-Bold.ttf);
+}
+
+@font-face {
+    font-family: Terminal;
+    src: url(./assets/fonts/Terminal.ttf);
+}
+
+/* Ensure showcase content has black text */
+.site-page-content-home h1,
+.site-page-content-home h2 {
+    color: #000000 !important;
+}
+
+/* Make main content headings black */
+.site-page-content h1,
+.site-page-content h2,
+.site-page-content h3,
+.site-page-content h4 {
+    color: #000000 !important;
+}
+
+/* Make Jennifer Amaya and Showcase text black */
+body h1,
+body h2,
+body h3 {
+    color: #000000 !important;
+}
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+p {
+    font-family: Millennium, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    color: #000000;
+}
+
+p b {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+}
+
+.showcase-header {
+    font-family: Terminal, 'Courier New', monospace;
+    font-size: 15px;
+    color: white;
+}
+
+.toolbar-text {
+    font-family: Terminal, 'Courier New', monospace;
+    font-size: 18px;
+}
+
+/* Make only the download link purple like menu items */
+.toolbar-text a {
+    color: #8B7FCC;
+}
+
+/* Ensure download link in ResumeDownload is purple */
+a p {
+    color: #8B7FCC;
+}
+
+h1 {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    font-size: 64px;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    font-size: 32px;
+}
+
+h3 {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    font-size: 24px;
+    letter-spacing: 0px;
+}
+
+h4 {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    font-size: 18px;
+    letter-spacing: 0px;
+}
+
+li {
+    margin-bottom: 16px;
+}
+
+/* Additional font classes for retro aesthetic */
+.retro-title {
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.retro-text {
+    font-family: Millennium, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+}
+
+.terminal-text {
+    font-family: Terminal, 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
+/* Navigation link styling */
+a {
+    color: #8B7FCC;
+    text-decoration: none;
+    font-family: Millennium, 'Times New Roman', Times, serif;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Custom J icon for Jennifer */
+.j-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #ffffff;
+    border: 1px solid #808080;
+    display: flex;
+    flex-direction: column;
+    font-family: MillenniumBold, 'Times New Roman', Times, serif;
+    color: #000000;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Blue title bar */
+.j-icon::before {
+    content: '';
+    width: 100%;
+    height: 6px;
+    background-color: #0000ff;
+    border-bottom: 1px solid #808080;
+}
+
+/* Main content area with J */
+.j-icon::after {
+    content: 'J';
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+}
+
+/* Site layout classes */
+.site-page {
+    display: flex;
+    left: 0px;
+    right: 0px;
+    position: absolute;
+    bottom: 0px;
+    top: 0px;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+}
+
+.site-page-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px;
+    width: 100%;
+    padding: 64px;
+    padding-top: 32px;
+    padding-left: 16px;
+    overflow-y: scroll;
+}
+
+.site-page-content-home {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0px;
+    width: 100%;
+    padding: 0px;
+    overflow-y: scroll;
+}
+
+.text-block {
+    margin-top: 16px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+}
+
+.captioned-image {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.captioned-image img {
+    width: 100%;
+}

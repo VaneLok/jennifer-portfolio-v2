@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Direct Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        /* Hide the loading screen completely */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: monospace;
+            font-size: 18px;
+        }
+        
+        /* Normal iframe display */
+        #gameArea iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        /* When game is ready, hide the iframe loading page elements */
+        .game-ready #gameArea iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            /* No scaling or positioning - just normal display */
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div>Loading DOOM...</div>
+        </div>
+    </div>
+
+    <script>
+        class DirectDoom {
+            constructor() {
+                this.gameArea = document.getElementById('gameArea');
+                this.loadingOverlay = document.getElementById('loadingOverlay');
+                this.clickAttempts = 0;
+                this.maxClickAttempts = 20;
+                this.init();
+            }
+            
+            init() {
+                console.log('Loading direct DOOM...');
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = 'https://silentspacemarine.com/';
+                iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                
+                iframe.onload = () => {
+                    console.log('DOOM page loaded, attempting to auto-start...');
+                    // Start trying to click PLAY SOLO immediately
+                    this.autoClickPlaySolo(iframe);
+                };
+                
+                iframe.onerror = () => {
+                    this.showError();
+                };
+                
+                this.gameArea.appendChild(iframe);
+            }
+            
+            autoClickPlaySolo(iframe) {
+                const tryClick = () => {
+                    this.clickAttempts++;
+                    console.log(`Auto-click attempt ${this.clickAttempts}/${this.maxClickAttempts}`);
+                    
+                    try {
+                        // Try to access iframe content
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                        if (iframeDoc) {
+                            // Look for PLAY SOLO button
+                            const buttons = iframeDoc.querySelectorAll('button, div, span, a');
+                            let clicked = false;
+                            
+                            for (let btn of buttons) {
+                                const text = (btn.textContent || btn.innerText || '').toLowerCase();
+                                if (text.includes('play solo') || text.includes('solo') || text.includes('single')) {
+                                    console.log('Found PLAY SOLO button, clicking:', text);
+                                    btn.click();
+                                    clicked = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (clicked) {
+                                // Wait a bit then hide the loading overlay to show the game
+                                setTimeout(() => {
+                                    this.hideLoadingShowGame();
+                                }, 2000);
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Cannot access iframe content, trying coordinate click');
+                    }
+                    
+                    // Try clicking at known coordinates for PLAY SOLO button
+                    this.clickAtCoordinates(iframe, 0.5, 0.65); // Center-bottom area where PLAY SOLO usually is
+                    
+                    // Continue trying if we haven't reached max attempts
+                    if (this.clickAttempts < this.maxClickAttempts) {
+                        setTimeout(tryClick, 1000); // Try every second
+                    } else {
+                        // Give up clicking and just show the game
+                        console.log('Max click attempts reached, showing game anyway');
+                        this.hideLoadingShowGame();
+                    }
+                };
+                
+                // Start trying after a short delay
+                setTimeout(tryClick, 2000);
+            }
+            
+            clickAtCoordinates(iframe, xPercent, yPercent) {
+                try {
+                    const rect = iframe.getBoundingClientRect();
+                    const x = rect.left + (rect.width * xPercent);
+                    const y = rect.top + (rect.height * yPercent);
+                    
+                    const clickEvent = new MouseEvent('click', {
+                        clientX: x,
+                        clientY: y,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    
+                    iframe.dispatchEvent(clickEvent);
+                    console.log(`Clicked at coordinates: ${x}, ${y}`);
+                } catch (e) {
+                    console.log('Coordinate click failed:', e);
+                }
+            }
+            
+            hideLoadingShowGame() {
+                console.log('Hiding loading overlay, showing game');
+                this.loadingOverlay.style.display = 'none';
+                document.body.classList.add('game-ready');
+                
+                // Try one more click in the center to make sure game is active
+                setTimeout(() => {
+                    const iframe = this.gameArea.querySelector('iframe');
+                    if (iframe) {
+                        this.clickAtCoordinates(iframe, 0.5, 0.5);
+                    }
+                }, 1000);
+            }
+            
+            showError() {
+                this.loadingOverlay.innerHTML = `
+                    <div style="color: #ff0000; text-align: center;">
+                        <div>Failed to load DOOM</div>
+                        <div style="font-size: 14px; margin-top: 10px;">
+                            Please refresh the page
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            new DirectDoom();
+        });
+    </script>
+</body>
+</html>

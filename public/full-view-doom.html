@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Full View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        /* Full view iframe - no scaling or transforms that cut off content */
+        #gameArea iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            display: block;
+        }
+        
+        /* Smart text hiding - covers only the text areas without cutting game */
+        .bottom-text-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(transparent 0%, rgba(0,0,0,0.8) 50%, #000 100%);
+            z-index: 999;
+            pointer-events: none;
+        }
+        
+        /* Additional overlay for any top branding */
+        .top-text-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 35px;
+            background: linear-gradient(#000 0%, rgba(0,0,0,0.8) 70%, transparent 100%);
+            z-index: 999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+        <!-- Smart overlays to hide text without cutting game -->
+        <div class="top-text-cover"></div>
+        <div class="bottom-text-cover"></div>
+    </div>
+
+    <script>
+        class FullViewDoom {
+            constructor() {
+                this.gameArea = document.getElementById('gameArea');
+                this.startTime = Date.now();
+                
+                // Use the working source
+                this.workingSources = [
+                    {
+                        url: 'https://silentspacemarine.com/',
+                        name: 'Silent Space Marine',
+                        timeout: 8000
+                    }
+                ];
+                
+                this.currentIndex = 0;
+                this.init();
+            }
+            
+            init() {
+                console.log('Starting full view DOOM...');
+                this.trySource();
+            }
+            
+            trySource() {
+                if (this.currentIndex >= this.workingSources.length) {
+                    this.showError();
+                    return;
+                }
+                
+                const source = this.workingSources[this.currentIndex];
+                console.log(`Loading: ${source.name}`);
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = source.url;
+                iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                
+                // Set up timeout
+                const timeout = setTimeout(() => {
+                    console.log(`${source.name} timeout, trying next...`);
+                    this.currentIndex++;
+                    this.gameArea.innerHTML = '';
+                    this.trySource();
+                }, source.timeout);
+                
+                iframe.onload = () => {
+                    clearTimeout(timeout);
+                    console.log(`${source.name} loaded successfully!`);
+                    
+                    // Auto-click to start game and hide unwanted elements
+                    setTimeout(() => {
+                        try {
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                            if (iframeDoc) {
+                                // Try to find and click "New Game" or similar buttons
+                                const newGameButtons = iframeDoc.querySelectorAll('button, a, div, span');
+                                for (let btn of newGameButtons) {
+                                    const text = btn.textContent?.toLowerCase() || '';
+                                    if (text.includes('new game') || text.includes('start') || text.includes('play')) {
+                                        console.log('Auto-clicking start button:', text);
+                                        btn.click();
+                                        break;
+                                    }
+                                }
+                                
+                                // Remove unwanted elements
+                                const unwantedElements = iframeDoc.querySelectorAll('.ad, .advertisement, .banner, .popup, .watermark');
+                                unwantedElements.forEach(el => el.remove());
+                            }
+                        } catch (e) {
+                            // Cross-origin restrictions prevent this, which is fine
+                            console.log('Cannot access iframe content (expected for cross-origin)');
+                        }
+                        
+                        // Try clicking in the center of the iframe to start the game
+                        try {
+                            const rect = iframe.getBoundingClientRect();
+                            const clickEvent = new MouseEvent('click', {
+                                clientX: rect.left + rect.width / 2,
+                                clientY: rect.top + rect.height / 2,
+                                bubbles: true
+                            });
+                            iframe.dispatchEvent(clickEvent);
+                        } catch (e) {
+                            console.log('Could not auto-click iframe');
+                        }
+                    }, 3000); // Wait 3 seconds for the page to fully load
+                };
+                
+                iframe.onerror = () => {
+                    clearTimeout(timeout);
+                    console.log(`${source.name} failed, trying next...`);
+                    this.currentIndex++;
+                    this.gameArea.innerHTML = '';
+                    this.trySource();
+                };
+                
+                this.gameArea.innerHTML = '';
+                this.gameArea.appendChild(iframe);
+            }
+            
+            showError() {
+                this.gameArea.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        color: #ff0000;
+                        font-size: 18px;
+                        text-align: center;
+                    ">
+                        <div>
+                            <div>Failed to load DOOM</div>
+                            <div style="font-size: 14px; margin-top: 10px; color: #666;">
+                                All sources failed to load
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Start when page loads
+        window.addEventListener('load', () => {
+            new FullViewDoom();
+        });
+    </script>
+</body>
+</html>

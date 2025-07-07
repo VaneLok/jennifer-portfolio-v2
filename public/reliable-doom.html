@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Reliable Fast</title>
+                const iframe = document.createElement('iframe');
+                iframe.src = source.url;
+                iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000; transform: scale(1.05); transform-origin: center center;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('scrolling', 'no');
+                iframe.setAttribute('frameborder', '0');yle>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        /* Overlay to hide bottom text */
+        .bottom-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #000;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        /* Make iframe fill the entire space and scale properly */
+        #gameArea iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: scale(1.05) !important; /* Very gentle scaling */
+            transform-origin: center center !important;
+            overflow: hidden !important;
+        }
+        
+        /* Hide any footer text or watermarks in the iframe */
+        iframe::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: #000;
+            z-index: 1000;
+        }
+        
+        /* Black overlay to gently hide bottom text */
+        .bottom-text-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px; /* Much smaller overlay */
+            background: #000;
+            z-index: 50; /* Lower z-index */
+            pointer-events: none;
+        }
+        
+        .reliable-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+        
+        .reliable-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .doom-logo {
+            font-size: 3rem;
+            color: #8B0000;
+            font-weight: bold;
+            letter-spacing: 3px;
+            animation: reliablePulse 1s infinite;
+        }
+        
+        @keyframes reliablePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .loading-info {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+        
+        <!-- Cover for bottom text -->
+        <div class="bottom-text-cover"></div>
+        
+        <div class="reliable-overlay" id="overlay" style="display: none;">
+            <div class="doom-logo">DOOM</div>
+            <div class="loading-info" id="loadingInfo">Starting up...</div>
+        </div>
+    </div>
+
+    <script>
+        class ReliableDoom {
+            constructor() {
+                this.overlay = document.getElementById('overlay');
+                this.gameArea = document.getElementById('gameArea');
+                this.loadingInfo = document.getElementById('loadingInfo');
+                this.startTime = Date.now();
+                
+                // Verified working sources
+                this.workingSources = [
+                    {
+                        url: 'https://silentspacemarine.com/',
+                        name: 'Silent Space Marine',
+                        timeout: 8000
+                    },
+                    {
+                        url: 'https://archive.org/embed/DoomsharewareEpisode',
+                        name: 'Internet Archive',
+                        timeout: 10000
+                    },
+                    {
+                        url: 'https://dos.zone/doom/',
+                        name: 'DOS Zone', 
+                        timeout: 8000
+                    }
+                ];
+                
+                this.currentIndex = 0;
+                this.init();
+            }
+            
+            init() {
+                console.log('Starting reliable DOOM...');
+                this.trySource();
+            }
+            
+            trySource() {
+                if (this.currentIndex >= this.workingSources.length) {
+                    this.showError();
+                    return;
+                }
+                
+                const source = this.workingSources[this.currentIndex];
+                console.log(`Trying source ${this.currentIndex + 1}/${this.workingSources.length}: ${source.name}`);
+                
+                this.loadingInfo.textContent = `Loading from ${source.name}...`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = source.url;
+                iframe.style.cssText = 'width: 100%; height: 110%; border: none; background: #000; transform: scale(1.1) translateY(-5%); transform-origin: center center; overflow: hidden;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('scrolling', 'no');
+                iframe.setAttribute('frameborder', '0');
+                
+                let loaded = false;
+                
+                iframe.onload = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        this.onGameReady(source.name);
+                    }
+                };
+                
+                iframe.onerror = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source failed: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                };
+                
+                this.gameArea.innerHTML = '';
+                this.gameArea.appendChild(iframe);
+                
+                // Timeout for this source
+                setTimeout(() => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source timeout: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                }, source.timeout);
+            }
+            
+            onGameReady(sourceName) {
+                const totalTime = Date.now() - this.startTime;
+                console.log(`DOOM ready from ${sourceName} in ${totalTime}ms`);
+                
+                // Immediately focus the game without any overlay delays
+                setTimeout(() => {
+                    const iframe = this.gameArea.querySelector('iframe');
+                    if (iframe) {
+                        iframe.focus();
+                        // Try to send keystrokes to skip intro screens
+                        iframe.contentWindow?.postMessage('skipIntro', '*');
+                    }
+                }, 100);
+            }
+            
+            showError() {
+                this.gameArea.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        flex-direction: column;
+                        color: #ff4444;
+                        font-size: 18px;
+                        text-align: center;
+                    ">
+                        <div style="margin-bottom: 20px; font-size: 24px; color: #8B0000;">DOOM</div>
+                        <div style="margin-bottom: 20px;">Unable to load from any source</div>
+                        <div style="margin-bottom: 30px; font-size: 14px; color: #666;">
+                            This may be due to network connectivity issues
+                        </div>
+                        <button onclick="location.reload()" style="
+                            background: #8B0000;
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-family: monospace;
+                            cursor: pointer;
+                            font-size: 14px;
+                            letter-spacing: 1px;
+                        ">TRY AGAIN</button>
+                    </div>
+                `;
+                this.overlay.classList.add('hidden');
+            }
+        }
+        
+        // Start immediately
+        new ReliableDoom();
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Working Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            position: relative;
+        }
+        
+        /* Very gentle scaling to reduce black borders without breaking the game */
+        #gameArea iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            transform: scale(1.08);
+            transform-origin: center center;
+        }
+        
+        /* Safe overlay to hide bottom text without affecting gameplay */
+        .text-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: #000;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+        <div class="text-cover"></div>
+    </div>
+
+    <script>
+        class WorkingDoom {
+            constructor() {
+                this.gameArea = document.getElementById('gameArea');
+                this.startTime = Date.now();
+                
+                // Verified working sources - back to the best one first
+                this.workingSources = [
+                    {
+                        url: 'https://silentspacemarine.com/',
+                        name: 'Silent Space Marine',
+                        timeout: 8000
+                    },
+                    {
+                        url: 'https://dos.zone/doom/',
+                        name: 'DOS Zone', 
+                        timeout: 8000
+                    },
+                    {
+                        url: 'https://archive.org/embed/DoomsharewareEpisode',
+                        name: 'Internet Archive',
+                        timeout: 10000
+                    }
+                ];
+                
+                this.currentIndex = 0;
+                this.init();
+            }
+            
+            init() {
+                console.log('Starting working DOOM...');
+                this.trySource();
+            }
+            
+            trySource() {
+                if (this.currentIndex >= this.workingSources.length) {
+                    this.showError();
+                    return;
+                }
+                
+                const source = this.workingSources[this.currentIndex];
+                console.log(`Trying source ${this.currentIndex + 1}/${this.workingSources.length}: ${source.name}`);
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = source.url;
+                iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000; transform: scale(1.08); transform-origin: center center;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                
+                let loaded = false;
+                
+                iframe.onload = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        this.onGameReady(source.name);
+                    }
+                };
+                
+                iframe.onerror = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source failed: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                };
+                
+                this.gameArea.innerHTML = '';
+                this.gameArea.appendChild(iframe);
+                
+                // Timeout for this source
+                setTimeout(() => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source timeout: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                }, source.timeout);
+            }
+            
+            onGameReady(sourceName) {
+                const totalTime = Date.now() - this.startTime;
+                console.log(`DOOM ready from ${sourceName} in ${totalTime}ms`);
+                
+                // Simply focus the game - clean and simple
+                setTimeout(() => {
+                    const iframe = this.gameArea.querySelector('iframe');
+                    if (iframe) {
+                        iframe.focus();
+                    }
+                }, 200);
+            }
+            
+            showError() {
+                this.gameArea.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        flex-direction: column;
+                        color: #ff4444;
+                        font-size: 18px;
+                        text-align: center;
+                    ">
+                        <div style="margin-bottom: 20px; font-size: 24px; color: #8B0000;">DOOM</div>
+                        <div style="margin-bottom: 20px;">Unable to load from any source</div>
+                        <div style="margin-bottom: 30px; font-size: 14px; color: #666;">
+                            This may be due to network connectivity issues
+                        </div>
+                        <button onclick="location.reload()" style="
+                            background: #8B0000;
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-family: monospace;
+                            cursor: pointer;
+                            font-size: 14px;
+                            letter-spacing: 1px;
+                        ">TRY AGAIN</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Start immediately
+        new WorkingDoom();
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Basic Working</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        /* Simple iframe - no scaling, no transforms, just basic display */
+        #gameArea iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+    </div>
+
+    <script>
+        class BasicDoom {
+            constructor() {
+                this.gameArea = document.getElementById('gameArea');
+                this.init();
+            }
+            
+            init() {
+                console.log('Loading basic working DOOM...');
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = 'https://silentspacemarine.com/';
+                iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                
+                iframe.onload = () => {
+                    console.log('DOOM loaded successfully!');
+                };
+                
+                iframe.onerror = () => {
+                    this.showError();
+                };
+                
+                this.gameArea.appendChild(iframe);
+            }
+            
+            showError() {
+                this.gameArea.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        color: #ff0000;
+                        font-size: 18px;
+                        text-align: center;
+                    ">
+                        Failed to load DOOM
+                    </div>
+                `;
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            new BasicDoom();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM - Simple Working</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        
+        .doom-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
+        #gameArea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+        
+        /* Make the iframe MUCH bigger and push content up to hide text */
+        #gameArea iframe {
+            width: 100%;
+            height: 130%;
+            border: none;
+            background: #000;
+            transform: scale(1.15) translateY(-8%);
+            transform-origin: center top;
+            position: relative;
+            top: -20px;
+        }
+        
+        /* Big black overlay to cover ALL bottom text */
+        .bottom-text-cover {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: #000;
+            z-index: 999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="doom-container">
+        <div id="gameArea"></div>
+        <!-- Only cover the bottom text -->
+        <div class="bottom-text-cover"></div>
+    </div>
+
+    <script>
+        class SimpleWorkingDoom {
+            constructor() {
+                this.gameArea = document.getElementById('gameArea');
+                this.startTime = Date.now();
+                
+                // Just use the working source
+                this.workingSources = [
+                    {
+                        url: 'https://silentspacemarine.com/',
+                        name: 'Silent Space Marine',
+                        timeout: 8000
+                    }
+                ];
+                
+                this.currentIndex = 0;
+                this.init();
+            }
+            
+            init() {
+                console.log('Starting simple working DOOM...');
+                this.trySource();
+            }
+            
+            trySource() {
+                if (this.currentIndex >= this.workingSources.length) {
+                    this.showError();
+                    return;
+                }
+                
+                const source = this.workingSources[this.currentIndex];
+                console.log(`Loading: ${source.name}`);
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = source.url;
+                iframe.style.cssText = 'width: 100%; height: 130%; border: none; background: #000; transform: scale(1.15) translateY(-8%); transform-origin: center top; position: relative; top: -20px;';
+                iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
+                iframe.setAttribute('allowfullscreen', 'true');
+                
+                let loaded = false;
+                
+                iframe.onload = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        this.onGameReady(source.name);
+                    }
+                };
+                
+                iframe.onerror = () => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source failed: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                };
+                
+                this.gameArea.innerHTML = '';
+                this.gameArea.appendChild(iframe);
+                
+                // Timeout for this source
+                setTimeout(() => {
+                    if (!loaded) {
+                        loaded = true;
+                        console.log(`Source timeout: ${source.name}`);
+                        this.currentIndex++;
+                        this.trySource();
+                    }
+                }, source.timeout);
+            }
+            
+            onGameReady(sourceName) {
+                const totalTime = Date.now() - this.startTime;
+                console.log(`DOOM ready from ${sourceName} in ${totalTime}ms`);
+                
+                // Focus the game
+                setTimeout(() => {
+                    const iframe = this.gameArea.querySelector('iframe');
+                    if (iframe) {
+                        iframe.focus();
+                    }
+                }, 200);
+            }
+            
+            showError() {
+                this.gameArea.innerHTML = `
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 100%;
+                        flex-direction: column;
+                        color: #ff4444;
+                        font-size: 18px;
+                        text-align: center;
+                    ">
+                        <div style="margin-bottom: 20px; font-size: 24px; color: #8B0000;">DOOM</div>
+                        <div style="margin-bottom: 20px;">Unable to load game</div>
+                        <button onclick="location.reload()" style="
+                            background: #8B0000;
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-family: monospace;
+                            cursor: pointer;
+                            font-size: 14px;
+                            letter-spacing: 1px;
+                        ">TRY AGAIN</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Start immediately
+        new SimpleWorkingDoom();
+    </script>
+</body>
+</html>
