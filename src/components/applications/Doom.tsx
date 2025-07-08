@@ -8,7 +8,7 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
     const [width, setWidth] = useState(1000);  // Slightly wider for better game view
     const [height, setHeight] = useState(700); // Slightly taller for better game view
     const canvasRef = useRef<HTMLDivElement>(null);
-    const [gameStatus, setGameStatus] = useState('running');
+    const [gameStatus, setGameStatus] = useState('loading');
 
     // Auto-load the game when component mounts
     useEffect(() => {
@@ -18,23 +18,24 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
     }, []);
 
     const startDoomGame = () => {
-        // Set to running immediately to show the game interface
-        setGameStatus('running');
-        
+        console.log('Starting DOOM game...');
         const canvas = canvasRef.current;
         if (!canvas) return;
         
-        // Clear the canvas and create iframe using your local doom.jsdos file
+        // Clear the canvas and create iframe loading DOOM from external site
         canvas.style.display = 'block';
         
         const iframe = document.createElement('iframe');
-        iframe.src = '/basic-working-doom.html';  // Use basic working version - no fancy stuff
+        const doomUrl = 'https://silentspacemarine.com/?t=' + Date.now();
+        console.log('Loading DOOM from:', doomUrl);
+        iframe.src = doomUrl;
         iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000;';
         iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
         iframe.setAttribute('allowfullscreen', 'true');
         
         iframe.onload = () => {
-            console.log('DOOM loaded successfully from local files!');
+            console.log('DOOM loaded successfully from external site!');
+            setGameStatus('running');
             // Game is ready, ensure it's interactive
             setTimeout(() => {
                 // Try to focus the iframe to make it interactive
@@ -43,7 +44,7 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
         };
         
         iframe.onerror = () => {
-            console.error('Failed to load local DOOM');
+            console.error('Failed to load external DOOM');
             setGameStatus('error');
         };
         
@@ -70,7 +71,7 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
                         <div style={{marginBottom: '20px'}}>Unable to load game</div>
                         <button 
                             style={buttonStyles}
-                            onClick={() => window.open('/simple-working-doom.html', '_blank')}
+                            onClick={() => window.open('https://silentspacemarine.com/', '_blank')}
                         >
                             Open in New Window
                         </button>
@@ -122,7 +123,7 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
             windowTitle="Doom"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText={'Powered by JS-DOS - Click to interact'}
+            bottomLeftText={'External DOOM - Click to interact'}
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
