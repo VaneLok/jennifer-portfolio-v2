@@ -18,37 +18,28 @@ const DoomApp: React.FC<DoomAppProps> = (props) => {
     }, []);
 
     const startDoomGame = () => {
-        console.log('Starting DOOM game...');
         const canvas = canvasRef.current;
         if (!canvas) return;
         
-        // Clear the canvas and create iframe loading DOOM from external site
         canvas.style.display = 'block';
         
         const iframe = document.createElement('iframe');
-        const doomUrl = 'https://silentspacemarine.com/?t=' + Date.now();
-        console.log('Loading DOOM from:', doomUrl);
-        iframe.src = doomUrl;
+        iframe.src = 'https://silentspacemarine.com/';
         iframe.style.cssText = 'width: 100%; height: 100%; border: none; background: #000;';
         iframe.setAttribute('allow', 'autoplay; fullscreen; gamepad; clipboard-write; cross-origin-isolated');
         iframe.setAttribute('allowfullscreen', 'true');
         
         iframe.onload = () => {
-            console.log('DOOM loaded successfully from external site!');
             setGameStatus('running');
-            // Game is ready, ensure it's interactive
             setTimeout(() => {
-                // Try to focus the iframe to make it interactive
                 iframe.focus();
-            }, 1000);
+            }, 500);
         };
         
         iframe.onerror = () => {
-            console.error('Failed to load external DOOM');
             setGameStatus('error');
         };
         
-        // Clear previous content and add iframe
         canvas.innerHTML = '';
         canvas.appendChild(iframe);
     };
