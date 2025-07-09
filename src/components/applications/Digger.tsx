@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Window from '../os/Window';
 import type { WindowAppProps } from '../../types/WindowAppProps';
 
-export interface DiggerAppProps extends WindowAppProps {}
+export interface TetrisAppProps extends WindowAppProps {}
 
-const DiggerApp: React.FC<DiggerAppProps> = (props) => {
-    const [width, setWidth] = useState(920);
-    const [height, setHeight] = useState(750);
+const TetrisApp: React.FC<TetrisAppProps> = (props) => {
+    const [width, setWidth] = useState(1000);
+    const [height, setHeight] = useState(700);
+    const canvasRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (canvasRef.current) {
+            canvasRef.current.innerHTML = `
+                <iframe 
+                    src="https://www.retrogames.cz/play_191-DOS.php?emulator=jsdos622" 
+                    style="width: 100%; height: 100%; border: none; background: #000;"
+                    allowfullscreen
+                    allow="autoplay; fullscreen; gamepad; clipboard-write">
+                </iframe>
+            `;
+        }
+    }, []);
 
     return (
         <Window
@@ -14,29 +28,27 @@ const DiggerApp: React.FC<DiggerAppProps> = (props) => {
             left={10}
             width={width}
             height={height}
-            windowTitle="Digger"
+            windowTitle="Tetris"
+            windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            windowBarColor="#2E4B00"
-            bottomLeftText={''}
+            bottomLeftText={'Powered by RetroGames.cz'}
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
+            minimizeWindow={props.onMinimize || (() => {})}
             onWidthChange={setWidth}
             onHeightChange={setHeight}
-            minimizeWindow={props.onMinimize || (() => {})}
         >
-            <iframe
-                src="/clean-digger.html"
-                width={width}
-                height={height - 30}
+            <div 
+                ref={canvasRef}
                 style={{
-                    border: 'none',
-                    backgroundColor: '#000',
-                    display: 'block'
+                    width: '100%',
+                    height: '100%',
+                    background: '#000',
+                    border: 'none'
                 }}
-                title="Digger Game"
             />
         </Window>
     );
 };
 
-export default DiggerApp;
+export default TetrisApp;

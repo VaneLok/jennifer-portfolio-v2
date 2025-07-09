@@ -63,12 +63,6 @@ const APPLICATIONS: {
         shortcutIcon: 'windowGameIcon',
         component: Digger,
     },
-    henordle: {
-        key: 'henordle',
-        name: 'Henordle',
-        shortcutIcon: 'henordleIcon',
-        component: Henordle,
-    },
 };
 
 const Desktop: React.FC<DesktopProps> = () => {
