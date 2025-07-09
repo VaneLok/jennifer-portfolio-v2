@@ -13,12 +13,32 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://jstris.jezevec10.com"
+                    src="https://archive.org/embed/msdos_Tetris_Classic_1992"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
                     mozallowfullscreen="true"
-                    allow="autoplay; fullscreen; gamepad; clipboard-write">
+                    allow="autoplay; fullscreen; gamepad; clipboard-write"
+                    onload="
+                        setTimeout(() => {
+                            try {
+                                const iframe = this;
+                                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                                const startBtn = doc.querySelector('button[class*=start], button[class*=play], .play-button, .start-button, button:contains(Start), button:contains(Play)');
+                                if (startBtn) {
+                                    startBtn.click();
+                                }
+                                // Hide Archive.org interface elements
+                                const style = doc.createElement('style');
+                                style.textContent = \`
+                                    .theatre-ia-wrap, .topinblock, .welcome-left, .row, .container-ia, .download-options, .boxy, .box, .threecolumns, .metadata, .download-button, .stealth, .item-details-metadata, .item-details-about, .item-details-right, .item-details-left { display: none !important; }
+                                    body { background: #000 !important; }
+                                    canvas, #canvas, #emulator { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; }
+                                \`;
+                                doc.head.appendChild(style);
+                            } catch(e) { console.log('Cross-origin restriction, but game will still work'); }
+                        }, 2000);
+                    ">
                 </iframe>
             `;
         }
@@ -33,7 +53,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
             windowTitle="Tetris"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText="Powered by Jstris"
+            bottomLeftText="Powered by Archive.org"
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
