@@ -5,10 +5,9 @@ import Doom from '../applications/Doom';
 import OregonTrail from '../applications/OregonTrail';
 import ShutdownSequence from './ShutdownSequence';
 // import ThisComputer from '../applications/ThisComputer';
-import Henordle from '../applications/Henordle';
 import Toolbar from './Toolbar';
-import Scrabble from '../applications/Scrabble';
-import Digger from '../applications/Digger';
+import Tetris from '../applications/Tetris';
+import SimCity from '../applications/SimCity';
 import type { IconName } from '../../assets/icons';
 import ShowcaseExplorer from '../applications/ShowcaseExplorer';
 import type { StyleSheetCSS } from '../../types/StyleSheetCSS';
@@ -55,13 +54,13 @@ const APPLICATIONS: {
         key: 'simcity',
         name: 'SimCity',
         shortcutIcon: 'windowGameIcon',
-        component: Scrabble, // Scrabble.tsx is now SimCity
+        component: SimCity,
     },
     tetris: {
         key: 'tetris',
         name: 'Tetris',
         shortcutIcon: 'windowGameIcon',
-        component: Digger, // Digger.tsx is now Tetris
+        component: Tetris,
     },
 };
 

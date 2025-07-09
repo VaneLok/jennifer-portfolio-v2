@@ -1,0 +1,28 @@
+{
+  "type": "jsdos",
+  "version": "1.0.0",
+  "archive": {
+    "name": "SimCity",
+    "files": [
+      {
+        "name": "SIMDEMO.EXE",
+        "path": "/simcity/SIMDEMO.EXE"
+      },
+      {
+        "name": "INSTDEMO.EXE", 
+        "path": "/simcity/INSTDEMO.EXE"
+      }
+    ]
+  },
+  "dosConfig": {
+    "cpu": "auto",
+    "memory": "16",
+    "machine": "svga_s3",
+    "sound": "sb16"
+  },
+  "autoexec": [
+    "mount c .",
+    "c:",
+    "SIMDEMO.EXE"
+  ]
+}

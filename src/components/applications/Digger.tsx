@@ -5,17 +5,24 @@ import type { WindowAppProps } from '../../types/WindowAppProps';
 export interface TetrisAppProps extends WindowAppProps {}
 
 const TetrisApp: React.FC<TetrisAppProps> = (props) => {
-    const [width, setWidth] = useState(1000);
-    const [height, setHeight] = useState(700);
+    const [width, setWidth] = useState(window.innerWidth);
+    const [height, setHeight] = useState(window.innerHeight - 32);
+    const [top] = useState(0);
+    const [left] = useState(0);
+    const [hideChrome] = useState(true);
+    const [fadeIn, setFadeIn] = useState(false);
     const canvasRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        setFadeIn(true);
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://www.retrogames.cz/play_191-DOS.php?emulator=jsdos622" 
+                    src="https://archive.org/embed/tetris-nes" 
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
+                    webkitallowfullscreen="true"
+                    mozallowfullscreen="true"
                     allow="autoplay; fullscreen; gamepad; clipboard-write">
                 </iframe>
             `;
@@ -24,27 +31,29 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
 
     return (
         <Window
-            top={10}
-            left={10}
+            top={top}
+            left={left}
             width={width}
             height={height}
-            windowTitle="Tetris"
-            windowBarColor="#1C1C1C"
-            windowBarIcon="windowGameIcon"
-            bottomLeftText={'Powered by RetroGames.cz'}
+            windowTitle={hideChrome ? '' : 'Tetris'}
+            windowBarColor={hideChrome ? 'transparent' : '#1C1C1C'}
+            windowBarIcon={hideChrome ? undefined : 'windowGameIcon'}
+            bottomLeftText={hideChrome ? '' : 'Powered by dos.zone'}
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
             onWidthChange={setWidth}
             onHeightChange={setHeight}
         >
-            <div 
+            <div
                 ref={canvasRef}
                 style={{
                     width: '100%',
                     height: '100%',
                     background: '#000',
-                    border: 'none'
+                    border: 'none',
+                    opacity: fadeIn ? 1 : 0,
+                    transition: 'opacity 0.7s ease-in'
                 }}
             />
         </Window>
