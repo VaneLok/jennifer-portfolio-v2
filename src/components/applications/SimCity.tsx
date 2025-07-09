@@ -13,7 +13,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://archive.org/embed/msdos_shareware_fb_SIMCITY?autoplay=1"
+                    src="https://archive.org/details/msdos_shareware_fb_SIMCITY"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -22,18 +22,29 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                 </iframe>
             `;
             
-            // Try to auto-click after load
+            // Add instructions for user
+            const instructionDiv = document.createElement('div');
+            instructionDiv.style.cssText = `
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                z-index: 1000;
+                pointer-events: none;
+            `;
+            instructionDiv.textContent = 'Click the green ▶ button to start!';
+            canvasRef.current.appendChild(instructionDiv);
+            
+            // Remove instruction after 5 seconds
             setTimeout(() => {
-                const iframe = canvasRef.current?.querySelector('iframe');
-                if (iframe) {
-                    try {
-                        // Simulate click on the iframe to trigger any auto-start
-                        iframe.click();
-                    } catch (e) {
-                        console.log('Auto-click attempt failed:', e);
-                    }
+                if (instructionDiv.parentNode) {
+                    instructionDiv.parentNode.removeChild(instructionDiv);
                 }
-            }, 3000);
+            }, 5000);
         }
     }, []);
 
@@ -63,6 +74,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                     alignItems: 'center',
                     backgroundColor: '#000',
                     color: '#fff',
+                    position: 'relative'
                 }}
             >
                 Loading SimCity...
