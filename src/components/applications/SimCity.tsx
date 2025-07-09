@@ -13,7 +13,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://archive.org/embed/msdos_shareware_fb_SIMCITY"
+                    src="https://archive.org/embed/msdos_shareware_fb_SIMCITY?autoplay=1"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -21,13 +21,26 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                     allow="autoplay; fullscreen; gamepad; clipboard-write">
                 </iframe>
             `;
+            
+            // Try to auto-click after load
+            setTimeout(() => {
+                const iframe = canvasRef.current?.querySelector('iframe');
+                if (iframe) {
+                    try {
+                        // Simulate click on the iframe to trigger any auto-start
+                        iframe.click();
+                    } catch (e) {
+                        console.log('Auto-click attempt failed:', e);
+                    }
+                }
+            }, 3000);
         }
     }, []);
 
     return (
         <Window
-            top={10}
-            left={10}
+            top={20}
+            left={20}
             width={width}
             height={height}
             windowTitle="SimCity"
@@ -45,10 +58,15 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                 style={{
                     width: '100%',
                     height: '100%',
-                    background: '#000',
-                    border: 'none'
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#000',
+                    color: '#fff',
                 }}
-            />
+            >
+                Loading SimCity...
+            </div>
         </Window>
     );
 };

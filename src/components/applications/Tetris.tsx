@@ -13,7 +13,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://archive.org/embed/TETRISC"
+                    src="https://archive.org/embed/TETRISC?autoplay=1"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -21,6 +21,19 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
                     allow="autoplay; fullscreen; gamepad; clipboard-write">
                 </iframe>
             `;
+            
+            // Try to auto-click after load
+            setTimeout(() => {
+                const iframe = canvasRef.current?.querySelector('iframe');
+                if (iframe) {
+                    try {
+                        // Simulate click on the iframe to trigger any auto-start
+                        iframe.click();
+                    } catch (e) {
+                        console.log('Auto-click attempt failed:', e);
+                    }
+                }
+            }, 3000);
         }
     }, []);
 
