@@ -13,7 +13,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://archive.org/details/TETRISC"
+                    src="https://dos.zone/TETRISC/TETRISC/"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -21,30 +21,6 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
                     allow="autoplay; fullscreen; gamepad; clipboard-write">
                 </iframe>
             `;
-            
-            // Add instructions for user
-            const instructionDiv = document.createElement('div');
-            instructionDiv.style.cssText = `
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                background: rgba(0,0,0,0.8);
-                color: white;
-                padding: 8px;
-                border-radius: 4px;
-                font-size: 12px;
-                z-index: 1000;
-                pointer-events: none;
-            `;
-            instructionDiv.textContent = 'Click the green ▶ button to start!';
-            canvasRef.current.appendChild(instructionDiv);
-            
-            // Remove instruction after 5 seconds
-            setTimeout(() => {
-                if (instructionDiv.parentNode) {
-                    instructionDiv.parentNode.removeChild(instructionDiv);
-                }
-            }, 5000);
         }
     }, []);
 
@@ -57,7 +33,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
             windowTitle="Tetris"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText="Powered by Archive.org"
+            bottomLeftText="Powered by dos.zone"
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
@@ -70,8 +46,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
                     width: '100%',
                     height: '100%',
                     background: '#000',
-                    border: 'none',
-                    position: 'relative'
+                    border: 'none'
                 }}
             />
         </Window>
