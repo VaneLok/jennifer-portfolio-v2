@@ -7,7 +7,7 @@ export default defineConfig({
     host: true
   },
   build: {
-    outDir: 'docs',
+    outDir: 'dist',
     assetsDir: 'assets',
     rollupOptions: {
       input: {
@@ -15,5 +15,5 @@ export default defineConfig({
       }
     }
   },
-  assetsInclude: ['**/*.wad', '**/*.WAD', '**/*.exe', '**/*.EXE']
+  assetsInclude: ['**/*.wad', '**/*.WAD', '**/*.exe', '**/*.EXE', '**/*.jsdos', '**/*.wasm']
 })

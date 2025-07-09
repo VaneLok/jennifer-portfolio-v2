@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/jennifer-amaya-inner-portfolio/',
+  build: {
+    outDir: 'dist',
+  },
   server: {
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
