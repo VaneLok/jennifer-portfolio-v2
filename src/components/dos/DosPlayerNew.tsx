@@ -57,7 +57,7 @@ export default function DosPlayer(props: PlayerProps) {
         // Try the modern js-dos v8 API first
         if (window.emulators) {
           console.log('Using js-dos v8 API for DOOM');
-          const emulators = window.emulators.pathPrefix('/jennifer-amaya-inner-portfolio/');
+          const emulators = window.emulators.pathPrefix('/');
           instance = await emulators.dosWorker();
         } else if (window.Dos) {
           console.log('Using js-dos legacy API for DOOM');
