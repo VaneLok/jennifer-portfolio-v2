@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Window from '../os/Window';
 import type { WindowAppProps } from '../../types/WindowAppProps';
-import SimpleDosPlayer from '../dos/SimpleDosPlayer';
 
 export interface SimCityAppProps extends WindowAppProps {}
 
 const SimCityApp: React.FC<SimCityAppProps> = (props) => {
     const [width, setWidth] = useState(1000);
     const [height, setHeight] = useState(700);
+    const canvasRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (canvasRef.current) {
+            canvasRef.current.innerHTML = `
+                <iframe 
+                    src="https://archive.org/embed/simcity-classic"
+                    style="width: 100%; height: 100%; border: none; background: #000;"
+                    allowfullscreen
+                    webkitallowfullscreen="true"
+                    mozallowfullscreen="true"
+                    allow="autoplay; fullscreen; gamepad; clipboard-write">
+                </iframe>
+            `;
+        }
+    }, []);
 
     return (
         <Window
@@ -18,17 +33,21 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
             windowTitle="SimCity"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText={'Powered by js-dos'}
+            bottomLeftText="Powered by Archive.org"
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
             onWidthChange={setWidth}
             onHeightChange={setHeight}
         >
-            <SimpleDosPlayer
-                width={width}
-                height={height}
-                bundleUrl="/simcity.jsdos"
+            <div
+                ref={canvasRef}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#000',
+                    border: 'none'
+                }}
             />
         </Window>
     );
