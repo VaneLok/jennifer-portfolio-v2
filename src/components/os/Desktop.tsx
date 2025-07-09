@@ -51,17 +51,17 @@ const APPLICATIONS: {
         shortcutIcon: 'doomIcon',
         component: Doom,
     },
-    scrabble: {
-        key: 'scrabble',
-        name: 'Scrabble',
-        shortcutIcon: 'scrabbleIcon',
-        component: Scrabble,
-    },
-    digger: {
-        key: 'digger',
-        name: 'Digger',
+    simcity: {
+        key: 'simcity',
+        name: 'SimCity',
         shortcutIcon: 'windowGameIcon',
-        component: Digger,
+        component: Scrabble, // Scrabble.tsx is now SimCity
+    },
+    tetris: {
+        key: 'tetris',
+        name: 'Tetris',
+        shortcutIcon: 'windowGameIcon',
+        component: Digger, // Digger.tsx is now Tetris
     },
 };
 
