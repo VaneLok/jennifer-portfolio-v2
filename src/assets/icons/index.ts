@@ -15,6 +15,8 @@ import windowGameIcon from './windowGameIcon.png';
 import windowExplorerIcon from './windowExplorerIcon.png';
 import windowsStartIcon from './windowsStartIcon.png';
 import scrabbleIcon from './scrabbleIcon.png';
+import simcityIcon from './simcityIcon.png';
+import tetrisIcon from './tetrisIcon.png';
 import close from './close.png';
 
 const icons = {
@@ -36,6 +38,8 @@ const icons = {
     windowExplorerIcon,
     windowsStartIcon,
     trailIcon,
+    simcityIcon,
+    tetrisIcon,
     jenniferIcon: 'jennifer-custom-icon', // Custom CSS-based icon
 };
 
