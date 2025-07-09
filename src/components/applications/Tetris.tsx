@@ -13,7 +13,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://dos.zone/TETRISC/TETRISC/"
+                    src="https://archive.org/embed/msdos_Tetris_Classic_1992"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -33,7 +33,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
             windowTitle="Tetris"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText="Powered by dos.zone"
+            bottomLeftText="Powered by Archive.org"
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}

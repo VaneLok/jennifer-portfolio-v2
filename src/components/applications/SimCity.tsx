@@ -13,7 +13,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://dos.zone/SimCity/SimCity/"
+                    src="https://archive.org/embed/SimCity_1989"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
@@ -33,7 +33,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
             windowTitle="SimCity"
             windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            bottomLeftText="Powered by dos.zone"
+            bottomLeftText="Powered by Archive.org"
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
