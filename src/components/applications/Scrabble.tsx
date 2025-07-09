@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import Window from '../os/Window';
 import type { WindowAppProps } from '../../types/WindowAppProps';
+import SimpleDosPlayer from '../dos/SimpleDosPlayer';
 
-export interface ScrabbleAppProps extends WindowAppProps {}
+export interface SimCityAppProps extends WindowAppProps {}
 
-const ScrabbleApp: React.FC<ScrabbleAppProps> = (props) => {
-    const [width, setWidth] = useState(920);
-    const [height, setHeight] = useState(750);
+const SimCityApp: React.FC<SimCityAppProps> = (props) => {
+    const [width, setWidth] = useState(1000);
+    const [height, setHeight] = useState(700);
+    // Removed useEffect that injected dos.zone iframe
 
     return (
         <Window
@@ -14,29 +16,23 @@ const ScrabbleApp: React.FC<ScrabbleAppProps> = (props) => {
             left={10}
             width={width}
             height={height}
-            windowTitle="Scrabble"
+            windowTitle="SimCity"
+            windowBarColor="#1C1C1C"
             windowBarIcon="windowGameIcon"
-            windowBarColor="#941d13"
-            bottomLeftText={''}
+            bottomLeftText={'Powered by js-dos'}
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
+            minimizeWindow={props.onMinimize || (() => {})}
             onWidthChange={setWidth}
             onHeightChange={setHeight}
-            minimizeWindow={props.onMinimize || (() => {})}
         >
-            <iframe
-                src="/clean-scrabble.html"
+            <SimpleDosPlayer
                 width={width}
-                height={height - 30}
-                style={{
-                    border: 'none',
-                    backgroundColor: '#000',
-                    display: 'block'
-                }}
-                title="Scrabble Game"
+                height={height}
+                bundleUrl="/simcity.zip"
             />
         </Window>
     );
 };
 
-export default ScrabbleApp;
+export default SimCityApp;
