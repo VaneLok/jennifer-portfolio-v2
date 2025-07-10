@@ -46,7 +46,5 @@ const icons = {
 export type IconName = keyof typeof icons;
 
 export function getIconByName(iconName: IconName): string {
-    const iconValue = icons[iconName];
-    console.log(`Getting icon for ${iconName}:`, iconValue);
-    return iconValue;
+    return icons[iconName];
 }
