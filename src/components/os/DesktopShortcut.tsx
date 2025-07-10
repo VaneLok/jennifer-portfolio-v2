@@ -24,7 +24,7 @@ const DesktopShortcut: React.FC<DesktopShortcutProps> = ({
 
     const [scaledStyle, setScaledStyle] = useState({});
 
-    const requiredIcon = getIconByName(icon);
+    const requiredIcon = getIconByName(icon); // Force cache bust
     const [doubleClickTimerActive, setDoubleClickTimerActive] = useState(false);
 
     const getShortcutId = useCallback(() => {
