@@ -13,7 +13,7 @@ const OregonTrailApp: React.FC<OregonTrailAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://www.retrogames.cz/play_687-DOS.php?emulator=jsdos622" 
+                    src="https://archive.org/embed/msdos_Oregon_Trail_Deluxe_The_1992" 
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     allow="autoplay; fullscreen; gamepad; clipboard-write">
@@ -31,7 +31,7 @@ const OregonTrailApp: React.FC<OregonTrailAppProps> = (props) => {
             windowTitle="Oregon Trail"
             windowBarColor="#1C1C1C"
             windowBarIcon="trailIcon"
-            bottomLeftText={'Powered by RetroGames.cz'}
+            bottomLeftText={'Powered by Archive.org'}
             closeWindow={props.onClose || (() => {})}
             onInteract={props.onInteract || (() => {})}
             minimizeWindow={props.onMinimize || (() => {})}
