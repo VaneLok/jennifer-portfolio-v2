@@ -1,0 +1,24 @@
+{
+  "type": "jsdos",
+  "version": "1.0.0",
+  "archive": {
+    "name": "Tetris",
+    "files": [
+      {
+        "name": "Tetris.exe",
+        "path": "/tetris/Tetris.exe"
+      }
+    ]
+  },
+  "dosConfig": {
+    "cpu": "auto",
+    "memory": "16",
+    "machine": "svga_s3",
+    "sound": "sb16"
+  },
+  "autoexec": [
+    "mount c .",
+    "c:",
+    "Tetris.exe"
+  ]
+}
