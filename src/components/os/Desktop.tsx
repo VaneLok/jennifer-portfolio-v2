@@ -53,13 +53,13 @@ const APPLICATIONS: {
     simcity: {
         key: 'simcity',
         name: 'SimCity',
-        shortcutIcon: 'simcityIcon',
+        shortcutIcon: 'doomIcon', // TEST: Use doom icon temporarily
         component: SimCity,
     },
     tetris: {
         key: 'tetris',
         name: 'Tetris',
-        shortcutIcon: 'tetrisIcon',
+        shortcutIcon: 'trailIcon', // TEST: Use trail icon temporarily
         component: Tetris,
     },
 };
