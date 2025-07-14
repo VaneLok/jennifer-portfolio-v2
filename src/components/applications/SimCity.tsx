@@ -13,7 +13,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
         if (canvasRef.current) {
             canvasRef.current.innerHTML = `
                 <iframe 
-                    src="https://archive.org/embed/SimCity_1989"
+                    src="https://archive.org/embed/msdos_festival_SIMCITY"
                     style="width: 100%; height: 100%; border: none; background: #000;"
                     allowfullscreen
                     webkitallowfullscreen="true"
