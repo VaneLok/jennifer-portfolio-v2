@@ -5,8 +5,8 @@ import type { WindowAppProps } from '../../types/WindowAppProps';
 export interface TetrisAppProps extends WindowAppProps {}
 
 const TetrisApp: React.FC<TetrisAppProps> = (props) => {
-    const [width, setWidth] = useState(800);
-    const [height, setHeight] = useState(600);
+    const [width, setWidth] = useState(640);
+    const [height, setHeight] = useState(480);
     const canvasRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
             canvasRef.current.innerHTML = `
                 <iframe 
                     src="https://archive.org/embed/msdos_Tetris_Classic_1992"
-                    style="width: 100%; height: 100%; border: none; background: #000;"
+                    style="width: 100%; height: 100%; border: none; background: transparent; display: block;"
                     allowfullscreen
                     webkitallowfullscreen="true"
                     mozallowfullscreen="true"
@@ -31,9 +31,48 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
                                 // Hide Archive.org interface elements
                                 const style = doc.createElement('style');
                                 style.textContent = \`
-                                    .theatre-ia-wrap, .topinblock, .welcome-left, .row, .container-ia, .download-options, .boxy, .box, .threecolumns, .metadata, .download-button, .stealth, .item-details-metadata, .item-details-about, .item-details-right, .item-details-left { display: none !important; }
-                                    body { background: #000 !important; }
-                                    canvas, #canvas, #emulator { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; }
+                                    .theatre-ia-wrap, .topinblock, .welcome-left, .row, .container-ia, 
+                                    .download-options, .boxy, .box, .threecolumns, .metadata, 
+                                    .download-button, .stealth, .item-details-metadata, 
+                                    .item-details-about, .item-details-right, .item-details-left,
+                                    .navbar, .nav, .header, .footer, .sidebar, .menu,
+                                    .ia-header, .ia-footer, .ia-nav, .archive-nav { 
+                                        display: none !important; 
+                                        visibility: hidden !important;
+                                    }
+                                    body { 
+                                        background: #000 !important; 
+                                        overflow: hidden !important;
+                                        margin: 0 !important;
+                                        padding: 0 !important;
+                                    }
+                                    html {
+                                        margin: 0 !important;
+                                        padding: 0 !important;
+                                    }
+                                    canvas, #canvas, #emulator, .dosbox-container, #dosbox, 
+                                    .emscripten, .emscripten_border, #output, #status, 
+                                    .spinner, #progress, #controls { 
+                                        position: absolute !important; 
+                                        top: 0 !important; 
+                                        left: 0 !important; 
+                                        width: 100% !important; 
+                                        height: 100% !important; 
+                                        max-width: 100% !important;
+                                        max-height: 100% !important;
+                                        z-index: 9999 !important;
+                                        object-fit: fill !important;
+                                    }
+                                    /* Force the game viewport to expand */
+                                    #gameContainer, .game-container, #main-canvas, 
+                                    .main-canvas, #jsdos, .jsdos {
+                                        width: 100% !important;
+                                        height: 100% !important;
+                                        position: absolute !important;
+                                        top: 0 !important;
+                                        left: 0 !important;
+                                        z-index: 9999 !important;
+                                    }
                                 \`;
                                 doc.head.appendChild(style);
                             } catch(e) { console.log('Cross-origin restriction, but game will still work'); }
@@ -65,8 +104,11 @@ const TetrisApp: React.FC<TetrisAppProps> = (props) => {
                 style={{
                     width: '100%',
                     height: '100%',
-                    background: '#000',
-                    border: 'none'
+                    background: 'transparent',
+                    border: 'none',
+                    margin: 0,
+                    padding: 0,
+                    overflow: 'hidden'
                 }}
             />
         </Window>

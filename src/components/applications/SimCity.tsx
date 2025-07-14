@@ -5,8 +5,8 @@ import type { WindowAppProps } from '../../types/WindowAppProps';
 export interface SimCityAppProps extends WindowAppProps {}
 
 const SimCityApp: React.FC<SimCityAppProps> = (props) => {
-    const [width, setWidth] = useState(1000);
-    const [height, setHeight] = useState(700);
+    const [width, setWidth] = useState(640);
+    const [height, setHeight] = useState(480);
     const canvasRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
             canvasRef.current.innerHTML = `
                 <iframe 
                     src="https://archive.org/embed/msdos_festival_SIMCITY"
-                    style="width: 100%; height: 100%; border: none; background: #000;"
+                    style="width: 100%; height: 100%; border: none; background: transparent; display: block;"
                     allowfullscreen
                     webkitallowfullscreen="true"
                     mozallowfullscreen="true"
@@ -65,13 +65,34 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                                     body { 
                                         background: #000 !important; 
                                         overflow: hidden !important;
+                                        margin: 0 !important;
+                                        padding: 0 !important;
                                     }
-                                    canvas, #canvas, #emulator, .dosbox-container { 
+                                    html {
+                                        margin: 0 !important;
+                                        padding: 0 !important;
+                                    }
+                                    canvas, #canvas, #emulator, .dosbox-container, #dosbox, 
+                                    .emscripten, .emscripten_border, #output, #status, 
+                                    .spinner, #progress, #controls { 
                                         position: absolute !important; 
                                         top: 0 !important; 
                                         left: 0 !important; 
                                         width: 100% !important; 
                                         height: 100% !important; 
+                                        max-width: 100% !important;
+                                        max-height: 100% !important;
+                                        z-index: 9999 !important;
+                                        object-fit: fill !important;
+                                    }
+                                    /* Force the game viewport to expand */
+                                    #gameContainer, .game-container, #main-canvas, 
+                                    .main-canvas, #jsdos, .jsdos {
+                                        width: 100% !important;
+                                        height: 100% !important;
+                                        position: absolute !important;
+                                        top: 0 !important;
+                                        left: 0 !important;
                                         z-index: 9999 !important;
                                     }
                                 \`;
@@ -128,8 +149,11 @@ const SimCityApp: React.FC<SimCityAppProps> = (props) => {
                 style={{
                     width: '100%',
                     height: '100%',
-                    background: '#000',
-                    border: 'none'
+                    background: 'transparent',
+                    border: 'none',
+                    margin: 0,
+                    padding: 0,
+                    overflow: 'hidden'
                 }}
             />
         </Window>
